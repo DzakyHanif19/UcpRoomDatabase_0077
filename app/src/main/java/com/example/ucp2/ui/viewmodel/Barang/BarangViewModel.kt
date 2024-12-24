@@ -9,7 +9,7 @@ import com.example.ucp2.data.entity.Barang
 import com.example.ucp2.repository.RepoBarang
 import kotlinx.coroutines.launch
 
-class BarangViewModel(private val repositoryBrg: RepoBarang) : ViewModel() {
+class BarangViewModel(private val repoBarang: RepoBarang) : ViewModel() {
     var BrgUiState by mutableStateOf(BrgUiState())
 
     fun updateUiState(barangEvent: BarangEvent) {
@@ -25,7 +25,7 @@ class BarangViewModel(private val repositoryBrg: RepoBarang) : ViewModel() {
             deskripsi = if (event.deskripsi.isNotEmpty()) null else "Deskripsi tidak boleh kosong",
             harga = if (event.harga > 0) null else "Stok tidak boleh negatif",
             stok = if (event.stok >= 0) null else "Stok tidak boleh kosong",
-            namasuplier = if (event.namasuplier.isNotEmpty()) null else "Nama Suplier tidak boleh kosong"
+            namasupplier = if (event.namasupplier.isNotEmpty()) null else "Nama Suplier tidak boleh kosong"
 
         )
         BrgUiState = BrgUiState.copy(isEntryValid = errorState)
@@ -37,7 +37,7 @@ class BarangViewModel(private val repositoryBrg: RepoBarang) : ViewModel() {
         if (validateFields()){
             viewModelScope.launch {
                 try {
-                    repositoryBrg.insertBarang(currentEvent.toBarangEntity())
+                    repoBarang.insertBarang(currentEvent.toBarangEntity())
                     BrgUiState = BrgUiState.copy(
                         snackbarMessage = "Data Berhasil Disimpan",
                         barangEvent = BarangEvent(),
@@ -74,11 +74,11 @@ data class FormBrgErrorState(
     val deskripsi: String? = null,
     val harga: String? = null,
     val stok: String? = null,
-    val namasuplier: String? = null
+    val namasupplier: String? = null
 ){
     fun isValid(): Boolean {
         return idbarang == null && namabarang == null && deskripsi == null &&
-                harga == null && stok == null && namasuplier == null
+                harga == null && stok == null && namasupplier == null
     }
 }
 data class BarangEvent(
@@ -87,7 +87,7 @@ data class BarangEvent(
     val deskripsi: String = "",
     val harga: Int = 0,
     val stok: Int = 0,
-    val namasuplier: String = ""
+    val namasupplier: String = ""
 )
 
 fun BarangEvent.toBarangEntity(): Barang = Barang(
@@ -96,5 +96,5 @@ fun BarangEvent.toBarangEntity(): Barang = Barang(
     deskripsi = deskripsi,
     harga = harga,
     stok = stok,
-    namasupplier = namasuplier
+    namasupplier = namasupplier
 )
